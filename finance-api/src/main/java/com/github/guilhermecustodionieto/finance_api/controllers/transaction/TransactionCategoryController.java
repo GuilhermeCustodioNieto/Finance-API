@@ -46,3 +46,4 @@ public class TransactionCategoryController {
         return ResponseEntity.ok().build();
     }
 }
+
