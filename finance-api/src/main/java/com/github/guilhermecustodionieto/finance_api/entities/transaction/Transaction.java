@@ -1,5 +1,8 @@
 package com.github.guilhermecustodionieto.finance_api.entities.transaction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.enums.TypeTransactionCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,6 +43,8 @@ public class Transaction {
     private TypeTransactionCategory typeTransactionCategory;
     @ManyToOne()
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonManagedReference
+
     private TransactionCategory category;
 
     public Transaction(BigDecimal value, Date date, Boolean isRecurring, TransactionCategory category) {
@@ -50,4 +55,12 @@ public class Transaction {
     }
 
 
+    public Transaction(BigDecimal value, Date date, String description, Boolean isRecurring, TypeTransactionCategory typeTransactionCategory, TransactionCategory category) {
+        this.value = value;
+        this.date = date;
+        this.description = description;
+        this.isRecurring = isRecurring;
+        this.typeTransactionCategory = typeTransactionCategory;
+        this.category = category;
+    }
 }

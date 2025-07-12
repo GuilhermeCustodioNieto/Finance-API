@@ -23,6 +23,10 @@ public class TransactionCategoryService {
         return repository.findAll();
     }
 
+    public List<TransactionCategory> findByName(String name){
+        return repository.findByName(name);
+    }
+
     public TransactionCategory findById(UUID id) throws EntityNotFoundException{
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Transaction Category", id.toString()));
     }

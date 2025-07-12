@@ -19,7 +19,7 @@ public class RecipeController {
         this.service = service;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<Recipe>> findAll(){
         return ResponseEntity.ok().body(service.findAll());
     }

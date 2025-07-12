@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface TransactionCategoryRepository extends JpaRepository<TransactionCategory, UUID> {
     List<TransactionCategory> findByTypeTransactionCategory(TypeTransactionCategory typeTransactionCategory);
+    List<TransactionCategory> findByName(String name);
 }

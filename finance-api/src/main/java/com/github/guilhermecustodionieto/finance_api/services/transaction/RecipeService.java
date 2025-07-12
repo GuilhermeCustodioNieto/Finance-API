@@ -2,12 +2,14 @@ package com.github.guilhermecustodionieto.finance_api.services.transaction;
 
 import com.github.guilhermecustodionieto.finance_api.dtos.transaction.RecipeDTO;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.Recipe;
+import com.github.guilhermecustodionieto.finance_api.entities.transaction.TransactionCategory;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.DataIntegrityViolationException;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.EntityNotFoundException;
 import com.github.guilhermecustodionieto.finance_api.repositories.RecipeRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -15,9 +17,11 @@ import java.util.UUID;
 @Service
 public class RecipeService {
     private RecipeRepository repository;
+    private TransactionCategoryService transactionCategoryService;
 
-    public RecipeService(RecipeRepository repository) {
+    public RecipeService(RecipeRepository repository, TransactionCategoryService transactionCategoryService) {
         this.repository = repository;
+        this.transactionCategoryService = transactionCategoryService;
     }
 
     public List<Recipe> findAll(){
@@ -33,16 +37,18 @@ public class RecipeService {
     }
 
     public Recipe create(RecipeDTO recipeDTO){
-        Date recipeDate = recipeDTO.date() == null ? new Date() : recipeDTO.date();
-
         try{
-            Recipe recipe = new Recipe(
-                    recipeDTO.value(),
-                    recipeDate,
-                    recipeDTO.isRecurring(),
-                    recipeDTO.category(),
-                    recipeDTO.origin()
-            );
+
+            Date recipeDate = recipeDTO.date() == null ? new Date() : recipeDTO.date();
+
+            List<TransactionCategory> foundCategories = transactionCategoryService.findByName(recipeDTO.category());
+
+            if(foundCategories.isEmpty()){
+
+                throw new EntityNotFoundException("Transaction Category", recipeDTO.category());
+            }
+
+            Recipe recipe = new Recipe(recipeDTO.value(), recipeDate, recipeDTO.description(), recipeDTO.isRecurring(), recipeDTO.typeTransactionCategory(), foundCategories.get(0), recipeDTO.origin());
 
             return repository.save(recipe);
         } catch (Exception e){
@@ -51,18 +57,46 @@ public class RecipeService {
 
     }
 
-    public Recipe update(UUID id, RecipeDTO recipeDTO){
+    public Recipe update(UUID id, RecipeDTO recipeDTO) {
         Recipe recipe = findById(id);
 
-        if(recipeDTO.value() != null) recipe.setValue(recipeDTO.value());
-        if(recipeDTO.date() != null) recipe.setDate(recipeDTO.date());
-        if(recipeDTO.category() != null) recipe.setCategory(recipeDTO.category());
-        if(recipeDTO.origin() != null) recipe.setOrigin(recipeDTO.origin());
-        if(recipeDTO.isRecurring() != null) recipe.setIsRecurring(recipeDTO.isRecurring());
-        if(recipeDTO.description() != null) recipe.setDescription(recipeDTO.description());
+        if (recipeDTO.category() != null) {
+            List<TransactionCategory> foundCategories = transactionCategoryService.findByName(recipeDTO.category());
+
+            if (foundCategories.isEmpty()) {
+                throw new EntityNotFoundException("Transaction Category", recipeDTO.category());
+            }
+
+            recipe.setCategory(foundCategories.get(0));
+        }
+
+        if (recipeDTO.value() != null && recipeDTO.value().compareTo(BigDecimal.ZERO) >= 0) {
+            recipe.setValue(recipeDTO.value());
+        }
+
+        if (recipeDTO.date() != null) {
+            recipe.setDate(recipeDTO.date());
+        }
+
+        if (recipeDTO.origin() != null && !recipeDTO.origin().isBlank()) {
+            recipe.setOrigin(recipeDTO.origin());
+        }
+
+        if (recipeDTO.isRecurring() != null) {
+            recipe.setIsRecurring(recipeDTO.isRecurring());
+        }
+
+        if (recipeDTO.description() != null && !recipeDTO.description().isBlank()) {
+            recipe.setDescription(recipeDTO.description());
+        }
+
+        if (recipeDTO.typeTransactionCategory() != null) {
+            recipe.setTypeTransactionCategory(recipeDTO.typeTransactionCategory());
+        }
 
         return repository.save(recipe);
     }
+
 
     public void delete(UUID id){
         Recipe recipe = findById(id);
