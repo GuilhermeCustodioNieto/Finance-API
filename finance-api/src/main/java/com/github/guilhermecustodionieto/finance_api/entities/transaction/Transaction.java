@@ -43,17 +43,14 @@ public class Transaction {
     private TypeTransactionCategory typeTransactionCategory;
     @ManyToOne()
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonManagedReference
-
-    private TransactionCategory category;
+    private TransactionCategory transactionCategory;
 
     public Transaction(BigDecimal value, Date date, Boolean isRecurring, TransactionCategory category) {
         this.value = value;
         this.date = date;
         this.isRecurring = isRecurring;
-        this.category = category;
+        this.transactionCategory = category;
     }
-
 
     public Transaction(BigDecimal value, Date date, String description, Boolean isRecurring, TypeTransactionCategory typeTransactionCategory, TransactionCategory category) {
         this.value = value;
@@ -61,6 +58,6 @@ public class Transaction {
         this.description = description;
         this.isRecurring = isRecurring;
         this.typeTransactionCategory = typeTransactionCategory;
-        this.category = category;
+        this.transactionCategory = category;
     }
 }

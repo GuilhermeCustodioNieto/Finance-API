@@ -6,6 +6,7 @@ import com.github.guilhermecustodionieto.finance_api.entities.transaction.Waste;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.enums.PaymentFormat;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.EntityNotFoundException;
 import com.github.guilhermecustodionieto.finance_api.repositories.WasteRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
+@Service
 public class WasteService {
     private WasteRepository wasteRepository;
     private TransactionCategoryService transactionCategoryService;
@@ -22,11 +24,11 @@ public class WasteService {
         this.transactionCategoryService = transactionCategoryService;
     }
 
-    List<Waste> findAll(){
+    public List<Waste> findAll(){
        return wasteRepository.findAll();
     }
 
-    Waste findById(UUID id){
+    public Waste findById(UUID id){
         var waste = wasteRepository.findById(id);
         if(waste.isEmpty()){
             throw new EntityNotFoundException("Waste", id.toString());
@@ -35,16 +37,16 @@ public class WasteService {
 
     }
 
-    List<Waste> findByDescription(String description){
+    public List<Waste> findByDescription(String description){
         return wasteRepository.findByDescriptionContainingIgnoreCase(description);
     }
 
-    List<Waste> findByPaymentFormat(PaymentFormat paymentFormat){
+    public List<Waste> findByPaymentFormat(PaymentFormat paymentFormat){
         return wasteRepository.findByPaymentFormat(paymentFormat);
     }
 
-    Waste create(WasteDTO wasteDTO){
-        Date date = wasteDTO.date() == null ? new Date() : wasteDTO.date();
+    public Waste create(WasteDTO wasteDTO){
+        var date = wasteDTO.date() == null ? new Date() : wasteDTO.date();
 
         List<TransactionCategory> transactionCategory = transactionCategoryService.findByName(wasteDTO.transactionCategory());
 
@@ -52,11 +54,11 @@ public class WasteService {
             throw new EntityNotFoundException("Waste", wasteDTO.transactionCategory());
         }
 
-        Waste waste = new Waste(wasteDTO.value(), date, wasteDTO.isRecurring(), transactionCategory.get(0), wasteDTO.paymentFormat(), wasteDTO.installments());
+        Waste waste = new Waste(wasteDTO.value(), date, wasteDTO.description(), wasteDTO.isRecurring(), wasteDTO.typeTransactionCategory(), transactionCategory.get(0), wasteDTO.paymentFormat(), wasteDTO.installments());
         return wasteRepository.save(waste);
     }
 
-    Waste update(UUID id,WasteDTO wasteDTO){
+    public Waste update(UUID id,WasteDTO wasteDTO){
         Waste waste = findById(id);
 
         if(wasteDTO.transactionCategory() != null){
@@ -66,7 +68,7 @@ public class WasteService {
                 throw new EntityNotFoundException("Waste", wasteDTO.transactionCategory());
             }
 
-            waste.setCategory(transactionCategory.get(0));
+            waste.setTransactionCategory(transactionCategory.get(0));
         }
 
         if(wasteDTO.typeTransactionCategory() != null){
@@ -100,7 +102,7 @@ public class WasteService {
         return wasteRepository.save(waste);
     }
 
-    void delete(UUID id){
+    public void delete(UUID id){
         Waste waste = findById(id);
 
         wasteRepository.delete(waste);

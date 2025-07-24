@@ -32,4 +32,6 @@ public class TransactionCategory {
         this.name = name;
         this.typeTransactionCategory = typeTransactionCategory;
     }
+
+
 }

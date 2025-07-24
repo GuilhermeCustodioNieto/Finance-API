@@ -70,7 +70,7 @@ public class RecipeService {
                 throw new EntityNotFoundException("Transaction Category", recipeDTO.transactionCategory());
             }
 
-            recipe.setCategory(foundCategories.get(0));
+            recipe.setTransactionCategory(foundCategories.get(0));
         }
 
         if (recipeDTO.value() != null && recipeDTO.value().compareTo(BigDecimal.ZERO) >= 0) {
