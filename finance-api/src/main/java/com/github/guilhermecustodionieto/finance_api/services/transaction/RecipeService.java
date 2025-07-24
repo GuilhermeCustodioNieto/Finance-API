@@ -6,7 +6,6 @@ import com.github.guilhermecustodionieto.finance_api.entities.transaction.Transa
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.DataIntegrityViolationException;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.EntityNotFoundException;
 import com.github.guilhermecustodionieto.finance_api.repositories.RecipeRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,7 +28,11 @@ public class RecipeService {
     }
 
     public List<Recipe> findByOrigin(String origin){
-        return repository.findByOrigin(origin);
+        return repository.findByOriginContainingIgnoreCase(origin);
+    }
+
+    public List<Recipe> findByDescription(String description){
+        return repository.findByDescriptionContainingIgnoreCase(description);
     }
 
     public Recipe findById(UUID id){
@@ -41,11 +44,11 @@ public class RecipeService {
 
             Date recipeDate = recipeDTO.date() == null ? new Date() : recipeDTO.date();
 
-            List<TransactionCategory> foundCategories = transactionCategoryService.findByName(recipeDTO.category());
+            List<TransactionCategory> foundCategories = transactionCategoryService.findByName(recipeDTO.transactionCategory());
 
             if(foundCategories.isEmpty()){
 
-                throw new EntityNotFoundException("Transaction Category", recipeDTO.category());
+                throw new EntityNotFoundException("Transaction Category", recipeDTO.transactionCategory());
             }
 
             Recipe recipe = new Recipe(recipeDTO.value(), recipeDate, recipeDTO.description(), recipeDTO.isRecurring(), recipeDTO.typeTransactionCategory(), foundCategories.get(0), recipeDTO.origin());
@@ -60,11 +63,11 @@ public class RecipeService {
     public Recipe update(UUID id, RecipeDTO recipeDTO) {
         Recipe recipe = findById(id);
 
-        if (recipeDTO.category() != null) {
-            List<TransactionCategory> foundCategories = transactionCategoryService.findByName(recipeDTO.category());
+        if (recipeDTO.transactionCategory() != null) {
+            List<TransactionCategory> foundCategories = transactionCategoryService.findByName(recipeDTO.transactionCategory());
 
             if (foundCategories.isEmpty()) {
-                throw new EntityNotFoundException("Transaction Category", recipeDTO.category());
+                throw new EntityNotFoundException("Transaction Category", recipeDTO.transactionCategory());
             }
 
             recipe.setCategory(foundCategories.get(0));

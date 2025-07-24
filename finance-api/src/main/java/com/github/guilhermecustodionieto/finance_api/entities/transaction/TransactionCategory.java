@@ -24,7 +24,7 @@ public class TransactionCategory {
     private String name;
     @Enumerated(value = EnumType.STRING)
     private TypeTransactionCategory typeTransactionCategory;
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "transactionCategory")
     @JsonBackReference
     private List<Transaction> transactions;
 

@@ -7,5 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
-    List<Recipe> findByOrigin(String origin);
+    List<Recipe> findByOriginContainingIgnoreCase(String origin);
+    List<Recipe> findByDescriptionContainingIgnoreCase(String description);
 }

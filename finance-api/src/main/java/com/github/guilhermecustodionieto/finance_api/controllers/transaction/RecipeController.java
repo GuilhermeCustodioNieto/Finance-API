@@ -4,6 +4,7 @@ import com.github.guilhermecustodionieto.finance_api.dtos.transaction.RecipeDTO;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.Recipe;
 import com.github.guilhermecustodionieto.finance_api.services.transaction.RecipeService;
 import jakarta.persistence.Column;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +26,14 @@ public class RecipeController {
     }
 
     @GetMapping("/origin")
-    public ResponseEntity<List<Recipe>> findByOrigin(@RequestBody String origin){
+    public ResponseEntity<List<Recipe>> findByOrigin(@RequestParam String origin){
+        System.out.println();
         return ResponseEntity.ok().body(service.findByOrigin(origin));
+    }
+
+    @GetMapping("/description")
+    public ResponseEntity<List<Recipe>> findByDescription(@RequestParam String description){
+        return ResponseEntity.ok().body(service.findByDescription(description));
     }
 
     @GetMapping("{id}")

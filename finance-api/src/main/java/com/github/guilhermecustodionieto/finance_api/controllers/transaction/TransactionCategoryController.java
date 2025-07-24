@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("transaction-category")
+@RequestMapping("transaction-transactionCategory")
 public class TransactionCategoryController {
     private TransactionCategoryService service;
 
