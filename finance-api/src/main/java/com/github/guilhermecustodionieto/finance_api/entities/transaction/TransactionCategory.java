@@ -1,7 +1,6 @@
 package com.github.guilhermecustodionieto.finance_api.entities.transaction;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.enums.TypeTransactionCategory;
 import jakarta.persistence.*;
 import lombok.*;

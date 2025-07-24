@@ -1,15 +1,10 @@
 package com.github.guilhermecustodionieto.finance_api.entities.transaction;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.enums.TypeTransactionCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Configuration;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;

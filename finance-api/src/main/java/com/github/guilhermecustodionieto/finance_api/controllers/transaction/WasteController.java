@@ -1,10 +1,8 @@
 package com.github.guilhermecustodionieto.finance_api.controllers.transaction;
 
 import com.github.guilhermecustodionieto.finance_api.dtos.transaction.WasteDTO;
-import com.github.guilhermecustodionieto.finance_api.entities.transaction.Recipe;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.Waste;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.enums.PaymentFormat;
-import com.github.guilhermecustodionieto.finance_api.services.transaction.RecipeService;
 import com.github.guilhermecustodionieto.finance_api.services.transaction.WasteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +13,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/wastes")
 public class WasteController {
-    private WasteService wasteService;
+    private final WasteService wasteService;
 
     public WasteController(WasteService wasteService) {
         this.wasteService = wasteService;

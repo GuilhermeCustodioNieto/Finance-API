@@ -15,8 +15,8 @@ import java.util.UUID;
 
 @Service
 public class RecipeService {
-    private RecipeRepository repository;
-    private TransactionCategoryService transactionCategoryService;
+    private final RecipeRepository repository;
+    private final TransactionCategoryService transactionCategoryService;
 
     public RecipeService(RecipeRepository repository, TransactionCategoryService transactionCategoryService) {
         this.repository = repository;

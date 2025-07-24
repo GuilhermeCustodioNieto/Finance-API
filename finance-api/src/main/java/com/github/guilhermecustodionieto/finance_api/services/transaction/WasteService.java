@@ -12,12 +12,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Service
 public class WasteService {
-    private WasteRepository wasteRepository;
-    private TransactionCategoryService transactionCategoryService;
+    private final WasteRepository wasteRepository;
+    private final TransactionCategoryService transactionCategoryService;
 
     public WasteService(WasteRepository wasteRepository, TransactionCategoryService transactionCategoryService) {
         this.wasteRepository = wasteRepository;
