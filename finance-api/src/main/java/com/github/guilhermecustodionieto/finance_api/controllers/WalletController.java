@@ -1,4 +1,4 @@
-package com.github.guilhermecustodionieto.finance_api.controllers.transaction;
+package com.github.guilhermecustodionieto.finance_api.controllers;
 
 import com.github.guilhermecustodionieto.finance_api.entities.Wallet;
 import com.github.guilhermecustodionieto.finance_api.services.WalletService;

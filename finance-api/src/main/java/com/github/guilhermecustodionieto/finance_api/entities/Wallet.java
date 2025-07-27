@@ -1,5 +1,6 @@
 package com.github.guilhermecustodionieto.finance_api.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.TransactionHistory;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.InsufficientBalanceException;
@@ -30,6 +31,10 @@ public class Wallet {
     @JoinColumn(name = "transaction_history_id", referencedColumnName = "id")
     @JsonManagedReference
     private TransactionHistory transactionHistory;
+
+    @OneToOne(mappedBy = "wallet")
+    @JsonBackReference
+    private User user;
 
     public Wallet(TransactionHistory transactionHistory) {
         this.transactionHistory = transactionHistory;
