@@ -3,7 +3,6 @@ package com.github.guilhermecustodionieto.finance_api.controllers.transaction;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.TransactionHistory;
 import com.github.guilhermecustodionieto.finance_api.services.transaction.TransactionHistoryService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;

@@ -1,7 +1,6 @@
 package com.github.guilhermecustodionieto.finance_api.entities.transaction;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.github.guilhermecustodionieto.finance_api.entities.Wallet;
 import jakarta.persistence.*;

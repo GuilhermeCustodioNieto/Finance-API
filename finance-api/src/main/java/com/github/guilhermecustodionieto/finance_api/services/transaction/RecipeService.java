@@ -72,7 +72,6 @@ public class RecipeService {
 
             return repository.save(recipe);
         } catch (Exception e){
-            e.printStackTrace();
             throw new DataIntegrityViolationException("Recipe");
 
         }

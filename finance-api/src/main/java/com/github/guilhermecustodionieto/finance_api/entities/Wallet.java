@@ -32,7 +32,6 @@ public class Wallet {
     private TransactionHistory transactionHistory;
 
     public Wallet(TransactionHistory transactionHistory) {
-        this.balance = BigDecimal.ZERO;
         this.transactionHistory = transactionHistory;
     }
 

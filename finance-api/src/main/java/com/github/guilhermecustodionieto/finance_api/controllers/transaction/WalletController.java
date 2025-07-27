@@ -1,7 +1,6 @@
 package com.github.guilhermecustodionieto.finance_api.controllers.transaction;
 
 import com.github.guilhermecustodionieto.finance_api.entities.Wallet;
-import com.github.guilhermecustodionieto.finance_api.entities.transaction.Waste;
 import com.github.guilhermecustodionieto.finance_api.services.WalletService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

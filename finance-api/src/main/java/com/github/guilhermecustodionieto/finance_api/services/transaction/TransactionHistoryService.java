@@ -1,7 +1,6 @@
 package com.github.guilhermecustodionieto.finance_api.services.transaction;
 
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.Transaction;
-import com.github.guilhermecustodionieto.finance_api.entities.transaction.TransactionCategory;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.TransactionHistory;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.EntityNotFoundException;
 import com.github.guilhermecustodionieto.finance_api.repositories.TransactionHistoryReporitory;

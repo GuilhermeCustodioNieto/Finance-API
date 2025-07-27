@@ -2,7 +2,6 @@ package com.github.guilhermecustodionieto.finance_api.controllers.transaction;
 
 import com.github.guilhermecustodionieto.finance_api.dtos.transaction.TransactionCategoryDTO;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.TransactionCategory;
-import com.github.guilhermecustodionieto.finance_api.exceptions.generics.EntityNotFoundException;
 import com.github.guilhermecustodionieto.finance_api.services.transaction.TransactionCategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
