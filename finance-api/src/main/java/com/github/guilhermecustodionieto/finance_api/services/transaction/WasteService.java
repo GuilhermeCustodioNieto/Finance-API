@@ -1,11 +1,15 @@
 package com.github.guilhermecustodionieto.finance_api.services.transaction;
 
 import com.github.guilhermecustodionieto.finance_api.dtos.transaction.WasteDTO;
+import com.github.guilhermecustodionieto.finance_api.entities.Wallet;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.TransactionCategory;
+import com.github.guilhermecustodionieto.finance_api.entities.transaction.TransactionHistory;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.Waste;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.enums.PaymentFormat;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.EntityNotFoundException;
 import com.github.guilhermecustodionieto.finance_api.repositories.WasteRepository;
+import com.github.guilhermecustodionieto.finance_api.services.WalletService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,10 +20,14 @@ import java.util.UUID;
 public class WasteService {
     private final WasteRepository wasteRepository;
     private final TransactionCategoryService transactionCategoryService;
+    private final TransactionHistoryService transactionHistoryService;
+    private final WalletService walletService;
 
-    public WasteService(WasteRepository wasteRepository, TransactionCategoryService transactionCategoryService) {
+    public WasteService(WasteRepository wasteRepository, TransactionCategoryService transactionCategoryService, TransactionHistoryService transactionHistoryService, WalletService walletService) {
         this.wasteRepository = wasteRepository;
         this.transactionCategoryService = transactionCategoryService;
+        this.transactionHistoryService = transactionHistoryService;
+        this.walletService = walletService;
     }
 
     public List<Waste> findAll(){
@@ -43,7 +51,8 @@ public class WasteService {
         return wasteRepository.findByPaymentFormat(paymentFormat);
     }
 
-    public Waste create(WasteDTO wasteDTO){
+    @Transactional
+    public Waste create(WasteDTO wasteDTO, UUID walletId){
         var date = wasteDTO.date() == null ? new Date() : wasteDTO.date();
 
         List<TransactionCategory> transactionCategory = transactionCategoryService.findByName(wasteDTO.transactionCategory());
@@ -52,7 +61,15 @@ public class WasteService {
             throw new EntityNotFoundException("Waste", wasteDTO.transactionCategory());
         }
 
-        Waste waste = new Waste(wasteDTO.value(), date, wasteDTO.description(), wasteDTO.isRecurring(), wasteDTO.typeTransactionCategory(), transactionCategory.get(0), wasteDTO.paymentFormat(), wasteDTO.installments());
+        Wallet wallet = walletService.findById(walletId);
+        walletService.withdraw(walletId, wasteDTO.value());
+        Waste waste = new Waste(wasteDTO.value(), date, wasteDTO.description(), wasteDTO.isRecurring(), wasteDTO.typeTransactionCategory(), transactionCategory.get(0), wallet.getTransactionHistory(), wasteDTO.paymentFormat(), wasteDTO.installments());
+
+
+        TransactionHistory transactionHistory = wallet.getTransactionHistory();
+        transactionHistory.getTransactionList().add(waste);
+        waste.setTransactionHistory(transactionHistory);
+
         return wasteRepository.save(waste);
     }
 
@@ -86,6 +103,10 @@ public class WasteService {
         }
 
         if(wasteDTO.value() != null){
+            Wallet wallet = waste.getTransactionHistory().getWallet();
+            wallet.deposit(waste.getValue());
+            wallet.withdraw(wasteDTO.value());
+            walletService.update(wallet.getId(), wallet);
             waste.setValue(wasteDTO.value());
         }
 
@@ -100,8 +121,9 @@ public class WasteService {
         return wasteRepository.save(waste);
     }
 
-    public void delete(UUID id){
+    public void delete(UUID id, UUID transactionHistoryId){
         Waste waste = findById(id);
+        transactionHistoryService.removeTransactionFromHistory(transactionHistoryId, waste);
 
         wasteRepository.delete(waste);
     }

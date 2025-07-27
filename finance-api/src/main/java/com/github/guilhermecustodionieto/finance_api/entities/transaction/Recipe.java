@@ -19,13 +19,9 @@
         @Column
         private String origin;
 
-        public Recipe(BigDecimal value, Date date, String description, Boolean isRecurring, TypeTransactionCategory typeTransactionCategory, TransactionCategory category, String origin) {
-            super(value, date, description, isRecurring, typeTransactionCategory, category);
+        public Recipe(BigDecimal value, Date date, String description, Boolean isRecurring, TypeTransactionCategory typeTransactionCategory, TransactionCategory transactionCategory, TransactionHistory transactionHistory, String origin) {
+            super(value, date, description, isRecurring, typeTransactionCategory, transactionCategory, transactionHistory);
             this.origin = origin;
         }
 
-        public Recipe(BigDecimal value, Date date, Boolean isRecurring, TransactionCategory category, String origin) {
-            super(value, date, isRecurring, category);
-            this.origin = origin;
-        }
     }

@@ -1,5 +1,7 @@
 package com.github.guilhermecustodionieto.finance_api.entities.transaction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.enums.TypeTransactionCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,27 +34,27 @@ public class Transaction {
     @Column
     private Boolean isRecurring;
 
-
     @Column
     @Enumerated(EnumType.STRING)
     private TypeTransactionCategory typeTransactionCategory;
+
     @ManyToOne()
     @JoinColumn(name = "category_id", nullable = false)
     private TransactionCategory transactionCategory;
 
-    public Transaction(BigDecimal value, Date date, Boolean isRecurring, TransactionCategory category) {
-        this.value = value;
-        this.date = date;
-        this.isRecurring = isRecurring;
-        this.transactionCategory = category;
-    }
+    @ManyToOne
+    @JoinColumn(name = "transaction_history_id")
+    @JsonBackReference
+    private TransactionHistory transactionHistory;
 
-    public Transaction(BigDecimal value, Date date, String description, Boolean isRecurring, TypeTransactionCategory typeTransactionCategory, TransactionCategory category) {
+    public Transaction(BigDecimal value, Date date, String description, Boolean isRecurring, TypeTransactionCategory typeTransactionCategory, TransactionCategory transactionCategory, TransactionHistory transactionHistory) {
         this.value = value;
         this.date = date;
         this.description = description;
         this.isRecurring = isRecurring;
         this.typeTransactionCategory = typeTransactionCategory;
-        this.transactionCategory = category;
+        this.transactionCategory = transactionCategory;
+        this.transactionHistory = transactionHistory;
     }
+
 }

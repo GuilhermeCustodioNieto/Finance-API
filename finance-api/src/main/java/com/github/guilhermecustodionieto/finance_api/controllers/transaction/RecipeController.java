@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("recipes")
+@RequestMapping("recipe")
 public class RecipeController {
     private RecipeService service;
 
@@ -42,8 +42,8 @@ public class RecipeController {
     }
 
     @PostMapping
-    public ResponseEntity<Recipe> create(@RequestBody RecipeDTO recipeDTO){
-        Recipe recipe = service.create(recipeDTO);
+    public ResponseEntity<Recipe> create(@RequestBody RecipeDTO recipeDTO, @RequestParam UUID walletId){
+        Recipe recipe = service.create(recipeDTO, walletId);
         return ResponseEntity.ok().body(recipe);
     }
 
@@ -54,8 +54,8 @@ public class RecipeController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id){
-        service.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable UUID id, @RequestParam UUID walletId){
+        service.delete(id, walletId);
         return ResponseEntity.ok().build();
     }
 

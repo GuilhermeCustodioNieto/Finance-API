@@ -1,11 +1,15 @@
 package com.github.guilhermecustodionieto.finance_api.services.transaction;
 
 import com.github.guilhermecustodionieto.finance_api.dtos.transaction.RecipeDTO;
+import com.github.guilhermecustodionieto.finance_api.entities.Wallet;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.Recipe;
 import com.github.guilhermecustodionieto.finance_api.entities.transaction.TransactionCategory;
+import com.github.guilhermecustodionieto.finance_api.entities.transaction.TransactionHistory;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.DataIntegrityViolationException;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.EntityNotFoundException;
 import com.github.guilhermecustodionieto.finance_api.repositories.RecipeRepository;
+import com.github.guilhermecustodionieto.finance_api.services.WalletService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,10 +21,14 @@ import java.util.UUID;
 public class RecipeService {
     private final RecipeRepository repository;
     private final TransactionCategoryService transactionCategoryService;
+    private final TransactionHistoryService transactionHistoryService;
+    private final WalletService walletService;
 
-    public RecipeService(RecipeRepository repository, TransactionCategoryService transactionCategoryService) {
+    public RecipeService(RecipeRepository repository, TransactionCategoryService transactionCategoryService, TransactionHistoryService transactionHistoryService, WalletService walletService) {
         this.repository = repository;
         this.transactionCategoryService = transactionCategoryService;
+        this.transactionHistoryService = transactionHistoryService;
+        this.walletService = walletService;
     }
 
     public List<Recipe> findAll(){
@@ -39,7 +47,8 @@ public class RecipeService {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Recipe", id.toString()));
     }
 
-    public Recipe create(RecipeDTO recipeDTO){
+    @Transactional
+    public Recipe create(RecipeDTO recipeDTO, UUID walletId){
         try{
 
             Date recipeDate = recipeDTO.date() == null ? new Date() : recipeDTO.date();
@@ -51,11 +60,21 @@ public class RecipeService {
                 throw new EntityNotFoundException("Transaction Category", recipeDTO.transactionCategory());
             }
 
-            Recipe recipe = new Recipe(recipeDTO.value(), recipeDate, recipeDTO.description(), recipeDTO.isRecurring(), recipeDTO.typeTransactionCategory(), foundCategories.get(0), recipeDTO.origin());
+            Wallet wallet = walletService.findById(walletId);
+
+            Recipe recipe = new Recipe(recipeDTO.value(), recipeDate, recipeDTO.description(), recipeDTO.isRecurring(), recipeDTO.typeTransactionCategory(), foundCategories.get(0), wallet.getTransactionHistory(), recipeDTO.origin());
+
+            walletService.deposit(walletId, recipeDTO.value());
+
+            TransactionHistory transactionHistory = wallet.getTransactionHistory();
+            transactionHistory.getTransactionList().add(recipe);
+            recipe.setTransactionHistory(transactionHistory);
 
             return repository.save(recipe);
         } catch (Exception e){
+            e.printStackTrace();
             throw new DataIntegrityViolationException("Recipe");
+
         }
 
     }
@@ -74,6 +93,10 @@ public class RecipeService {
         }
 
         if (recipeDTO.value() != null && recipeDTO.value().compareTo(BigDecimal.ZERO) >= 0) {
+            Wallet wallet = recipe.getTransactionHistory().getWallet();
+            wallet.withdraw(recipe.getValue());
+            wallet.deposit(recipeDTO.value());
+            walletService.update(wallet.getId(), wallet);
             recipe.setValue(recipeDTO.value());
         }
 
@@ -101,9 +124,9 @@ public class RecipeService {
     }
 
 
-    public void delete(UUID id){
+    public void delete(UUID id, UUID transactionHistoryId){
         Recipe recipe = findById(id);
-
+        transactionHistoryService.removeTransactionFromHistory(transactionHistoryId, recipe);
         repository.delete(recipe);
     }
 

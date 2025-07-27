@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/wastes")
+@RequestMapping("/waste")
 public class WasteController {
     private final WasteService wasteService;
 
@@ -40,8 +40,8 @@ public class WasteController {
     }
 
     @PostMapping
-    public ResponseEntity<Waste> create(@RequestBody WasteDTO wasteDTO){
-        return ResponseEntity.ok().body(wasteService.create(wasteDTO));
+    public ResponseEntity<Waste> create(@RequestBody WasteDTO wasteDTO, @RequestParam UUID walletId){
+        return ResponseEntity.ok().body(wasteService.create(wasteDTO, walletId));
     }
 
     @PatchMapping("{id}")
@@ -50,8 +50,8 @@ public class WasteController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id){
-        wasteService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable UUID id, @RequestParam UUID walletId){
+        wasteService.delete(id, walletId);
         return ResponseEntity.ok().build();
     }
 }

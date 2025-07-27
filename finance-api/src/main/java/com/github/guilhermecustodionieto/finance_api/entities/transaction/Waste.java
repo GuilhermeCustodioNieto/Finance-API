@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tb_waste")
@@ -23,8 +24,8 @@ public class Waste extends Transaction{
     @Column
     private Integer installments;
 
-    public Waste(BigDecimal value, Date date, String description, Boolean isRecurring, TypeTransactionCategory typeTransactionCategory, TransactionCategory category, PaymentFormat paymentFormat, Integer installments) {
-        super(value, date, description, isRecurring, typeTransactionCategory, category);
+    public Waste(BigDecimal value, Date date, String description, Boolean isRecurring, TypeTransactionCategory typeTransactionCategory, TransactionCategory transactionCategory, TransactionHistory transactionHistory, PaymentFormat paymentFormat, Integer installments) {
+        super(value, date, description, isRecurring, typeTransactionCategory, transactionCategory, transactionHistory);
         this.paymentFormat = paymentFormat;
         this.installments = installments;
     }
