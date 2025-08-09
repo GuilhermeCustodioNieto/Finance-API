@@ -6,7 +6,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,7 +21,7 @@ import java.util.UUID;
 @Setter
 @EqualsAndHashCode(of = {"id"})
 @ToString
-public class User {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

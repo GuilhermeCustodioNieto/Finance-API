@@ -1,14 +1,21 @@
 package com.github.guilhermecustodionieto.finance_api.services;
 
-import com.github.guilhermecustodionieto.finance_api.dtos.transaction.user.UserAuthenticationDTO;
-import com.github.guilhermecustodionieto.finance_api.dtos.transaction.user.UserCreationDTO;
-import com.github.guilhermecustodionieto.finance_api.dtos.transaction.user.UserUpdatingDTO;
+import com.github.guilhermecustodionieto.finance_api.config.SecurityConfig;
+import com.github.guilhermecustodionieto.finance_api.dtos.authentication.AuthenticationDTO;
+import com.github.guilhermecustodionieto.finance_api.dtos.authentication.RecoveryJwtTokenDTO;
+import com.github.guilhermecustodionieto.finance_api.dtos.authentication.UserAuthenticationDTO;
+import com.github.guilhermecustodionieto.finance_api.dtos.user.UserCreationDTO;
+import com.github.guilhermecustodionieto.finance_api.dtos.user.UserUpdatingDTO;
 import com.github.guilhermecustodionieto.finance_api.entities.User;
+import com.github.guilhermecustodionieto.finance_api.entities.UserDetailsImpl;
 import com.github.guilhermecustodionieto.finance_api.entities.Wallet;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.DataIntegrityViolationException;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.EntityNotFoundException;
 import com.github.guilhermecustodionieto.finance_api.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +29,29 @@ public class UserService {
     private final WalletService walletService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository, WalletService walletService, PasswordEncoder passwordEncoder) {
+    private AuthenticationManager authenticationManager;
+    private JwtTokenService jwtTokenService;
+    private SecurityConfig securityConfig;
+
+    public UserService(UserRepository repository, WalletService walletService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenService jwtTokenService, SecurityConfig securityConfig) {
         this.repository = repository;
         this.walletService = walletService;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenService = jwtTokenService;
+        this.securityConfig = securityConfig;
     }
+
+    public RecoveryJwtTokenDTO authenticateUser(AuthenticationDTO authenticationDTO){
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticationDTO.email(), authenticationDTO.password());
+
+        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        return new RecoveryJwtTokenDTO(jwtTokenService.generateToken(userDetails));
+    }
+
 
     public List<User> findAll(){
         return repository.findAll();
@@ -52,6 +77,16 @@ public class UserService {
         }
 
         return optionalUser.get();
+    }
+
+    public User findByEmail(String email){
+        User user = repository.findByEmail(email);
+
+        if(user == null){
+            throw new EntityNotFoundException("User", "email: " + email);
+        }
+
+        return user;
     }
 
     @Transactional

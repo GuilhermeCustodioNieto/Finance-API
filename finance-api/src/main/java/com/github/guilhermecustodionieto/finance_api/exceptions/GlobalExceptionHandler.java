@@ -1,5 +1,6 @@
 package com.github.guilhermecustodionieto.finance_api.exceptions;
 
+import com.github.guilhermecustodionieto.finance_api.exceptions.generics.AuthenticationException;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.DataIntegrityViolationException;
 import com.github.guilhermecustodionieto.finance_api.exceptions.generics.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -69,6 +70,12 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, List.of("Endpoint não encontrado: " + e.getRequestURL()));
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
+        log.error(e.getMessage());
+        return buildResponse(HttpStatus.UNAUTHORIZED, List.of("Não autorizado: " + e.getMessage()));
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException e) {
         return buildResponse(HttpStatus.UNAUTHORIZED, List.of("Acesso negado. Você não tem permissão para este recurso."));
@@ -81,7 +88,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception e) {
-        log.error("Erro inesperado", e);
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, List.of("Erro inesperado: " + e.getClass().getSimpleName()));
     }
+
+
 }

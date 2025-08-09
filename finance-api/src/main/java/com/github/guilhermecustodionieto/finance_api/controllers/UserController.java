@@ -1,8 +1,8 @@
 package com.github.guilhermecustodionieto.finance_api.controllers;
 
-import com.github.guilhermecustodionieto.finance_api.dtos.transaction.user.UserAuthenticationDTO;
-import com.github.guilhermecustodionieto.finance_api.dtos.transaction.user.UserCreationDTO;
-import com.github.guilhermecustodionieto.finance_api.dtos.transaction.user.UserUpdatingDTO;
+import com.github.guilhermecustodionieto.finance_api.dtos.authentication.UserAuthenticationDTO;
+import com.github.guilhermecustodionieto.finance_api.dtos.user.UserCreationDTO;
+import com.github.guilhermecustodionieto.finance_api.dtos.user.UserUpdatingDTO;
 import com.github.guilhermecustodionieto.finance_api.entities.User;
 import com.github.guilhermecustodionieto.finance_api.services.UserService;
 import jakarta.validation.Valid;
@@ -29,13 +29,6 @@ public class UserController {
     @GetMapping("{id}")
     public ResponseEntity<UserAuthenticationDTO> findById(@PathVariable UUID id){
         return ResponseEntity.ok().body(userService.findById(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<UserAuthenticationDTO> create(@Valid @RequestBody UserCreationDTO userCreationDTO){
-        UserAuthenticationDTO user = userService.create(userCreationDTO);
-
-        return ResponseEntity.ok().body(user);
     }
 
     @PatchMapping("{id}")

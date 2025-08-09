@@ -1,4 +1,4 @@
-package com.github.guilhermecustodionieto.finance_api.dtos.transaction.user;
+package com.github.guilhermecustodionieto.finance_api.dtos.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

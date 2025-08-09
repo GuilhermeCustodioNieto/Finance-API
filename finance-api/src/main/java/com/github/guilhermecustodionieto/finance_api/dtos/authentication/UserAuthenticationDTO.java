@@ -1,4 +1,4 @@
-package com.github.guilhermecustodionieto.finance_api.dtos.transaction.user;
+package com.github.guilhermecustodionieto.finance_api.dtos.authentication;
 
 import com.github.guilhermecustodionieto.finance_api.entities.Wallet;
 
