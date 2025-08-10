@@ -20,7 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("transaction-category")
 @SecurityRequirement(name = "bearerAuth")
-@Tag(name = "TransactionCategory", description = "Operações relacionadas a categorias de transação")
+@Tag(name = "Transaction Category", description = "Operações relacionadas a categorias de transação")
 public class TransactionCategoryController {
     private TransactionCategoryService service;
 

@@ -22,7 +22,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/user")
 @SecurityRequirement(name = "bearerAuth")
-@Tag(name = "Usuários", description = "Operações de gerenciamento de usuários")
+@Tag(name = "User", description = "Operações de gerenciamento de usuários")
 public class UserController {
 
     private final UserService userService;

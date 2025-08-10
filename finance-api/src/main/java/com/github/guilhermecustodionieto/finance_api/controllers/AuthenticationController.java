@@ -12,13 +12,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("auth")
-@Tag(name = "Autenticação", description = "Endpoints para login e registro de usuários")
+@Tag(name = "Authentication", description = "Endpoints para login e registro de usuários")
 public class AuthenticationController {
 
     @Autowired

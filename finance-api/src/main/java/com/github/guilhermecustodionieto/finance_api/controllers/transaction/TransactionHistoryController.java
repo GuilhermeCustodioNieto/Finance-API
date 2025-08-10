@@ -17,7 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/transaction-history")
 @SecurityRequirement(name = "bearerAuth")
-@Tag(name = "TransactionHistory", description = "Operações relacionadas ao histórico de transações")
+@Tag(name = "Transaction History", description = "Operações relacionadas ao histórico de transações")
 public class TransactionHistoryController {
 
     private final TransactionHistoryService transactionHistoryService;

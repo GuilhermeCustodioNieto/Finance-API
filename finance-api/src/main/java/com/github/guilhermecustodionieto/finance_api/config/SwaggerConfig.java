@@ -7,7 +7,13 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.tags.Tag;
+
+
+import java.util.Arrays;
 
 @Configuration
 @OpenAPIDefinition(
@@ -35,4 +41,22 @@ import org.springframework.context.annotation.Configuration;
         bearerFormat = "JWT"
 )
 public class SwaggerConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new io.swagger.v3.oas.models.info.Info()
+                        .title("Finance API")
+                        .description("API para gerenciamento financeiro pessoal com autenticação JWT")
+                        .version("1.0.0"))
+                .tags(Arrays.asList(
+                        new Tag().name("Authentication").description("Endpoints para autenticação e registro de usuários"),
+                        new Tag().name("User").description("Gerenciamento de usuários"),
+                        new Tag().name("Wallet").description("Operações com carteiras financeiras"),
+                        new Tag().name("Transaction History").description("Consulta ao histórico de transações"),
+                        new Tag().name("Waste").description("Gerenciamento de despesas"),
+                        new Tag().name("Recipe").description("Gerenciamento de receitas"),
+                        new Tag().name("Transaction Category").description("Gerenciamento de categorias de transações")
+                ));
+    }
 }
