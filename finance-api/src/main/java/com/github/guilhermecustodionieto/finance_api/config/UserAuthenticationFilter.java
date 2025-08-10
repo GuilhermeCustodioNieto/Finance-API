@@ -43,12 +43,10 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         if (isPublicEndpoint(request)) {
-            // Se o endpoint é público, não faz autenticação e segue a cadeia de filtros
+
             filterChain.doFilter(request, response);
             return;
         }
-
-        // Para endpoints protegidos, tenta recuperar o token e autenticar
         String token = recoverToken(request);
 
         if (token != null && !token.isBlank()) {
