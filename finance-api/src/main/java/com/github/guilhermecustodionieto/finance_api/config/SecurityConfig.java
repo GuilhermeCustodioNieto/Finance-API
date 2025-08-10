@@ -30,8 +30,13 @@ public class SecurityConfig {
 
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/auth/login",
-            "/auth/register"
+            "/auth/register",
+            "/swagger-ui/index.html",
+            "/v2/api-docs",
+            "/swagger-resources/**",
+            "/webjars/**"
     };
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, UserAuthenticationFilter userAuthenticationFilter) throws Exception {
@@ -72,4 +77,6 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
+
+
 }

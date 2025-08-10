@@ -67,6 +67,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoHandlerFound(NoHandlerFoundException e) {
+        e.printStackTrace();
         return buildResponse(HttpStatus.NOT_FOUND, List.of("Endpoint não encontrado: " + e.getRequestURL()));
     }
 
