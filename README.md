@@ -66,6 +66,14 @@ Finance-API/
 * **Histórico de transações** detalhado.
 * **Organização por categorias** de transações.
 
+## **Diagramas**
+
+- Diagrama de Classes 
+<img src="Class Diagram0.png" alt="Diagrama de Classes">
+
+- UML
+<img src="UseCase Diagram0.png" alt="UML">
+
 ---
 
 ## **Instalação**
