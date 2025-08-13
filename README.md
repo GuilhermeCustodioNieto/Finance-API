@@ -116,12 +116,6 @@ docker compose up --build
 ---
 
 ## **Rotas da API**
-Beleza — com base no Swagger que você mostrou, dá para organizar todas as rotas da sua API Finance em um formato bem estruturado.
-Vou separar por recurso e método HTTP, exatamente como está no Swagger:
-
----
-
-## **Rotas da Finance API**
 
 ### **User – Gerenciamento de usuários**
 
